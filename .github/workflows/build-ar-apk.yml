@@ -31,8 +31,7 @@ jobs:
 
       - name: Free disk space
         run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android/sdk/ndk \
-            "$AGENT_TOOLSDIRECTORY/Haskell" || true
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
           df -h /
 
       - name: Set up JDK
@@ -48,12 +47,16 @@ jobs:
           channel: stable
           cache: true
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+
       - name: Install Android SDK packages
         run: |
           set -euo pipefail
           yes | sdkmanager --licenses >/dev/null 2>&1 || true
           sdkmanager \
-            "platform-tools" \
             "platforms;android-${ANDROID_PLATFORM_VERSION}" \
             "build-tools;${ANDROID_BUILD_TOOLS_VERSION}" \
             "cmake;${ANDROID_CMAKE_VERSION}" \
