@@ -15,6 +15,8 @@ permissions:
 env:
   JAVA_VERSION: '21'
   FLUTTER_VERSION: '3.47.2'
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.28.0'
   ANDROID_BUILD_TOOLS_VERSION: '36.0.0'
   ANDROID_PLATFORM_VERSION: '37.0'
   ANDROID_CMAKE_VERSION: '3.22.1'
@@ -46,6 +48,19 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
           cache: true
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: webchat/pnpm-lock.yaml
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
